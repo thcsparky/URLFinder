@@ -1,0 +1,41 @@
+import os
+import requests
+urlsgot = []
+
+def geturls(a):
+
+    global urlsgot
+
+    linkreplace = "https://google.com/search?q=REPLACE&client=firefox-b-1-e"
+    stoppingpoint = 'did not match any documents.'
+    linkreplace = linkreplace.replace('REPLACE', a)
+    if len(urlsgot) > 0:
+        linkreplace = linkreplace + '&start=' + str(len(urlsgot))
+
+    req = requests.get(linkreplace)
+    if req.status_code != 200:
+        print('Error retrieving...\n')
+
+
+    ##begin parsing for links
+    returndat = req.text
+    urlfinder = '/url?q='
+    if returndat.find(urlfinder) > -1:
+        urlparse = returndat.split(urlfinder)
+        for x in urlparse:
+            if x.split('&amp')[0].find('google.com') <= 0 and x.split('&amp')[0].find('function(') <= 0:
+                urlsgot.append(x.split('&amp')[0])
+
+
+    if returndat.find(stoppingpoint) <= 0:
+        print('Got ' + str(len(urlsgot)) + ' URLS../n')
+        geturls(a)
+
+    elif returndat.find(stoppingpoint) > -1:
+        for x in urlsgot:
+            print(x + '\n')
+        quit()
+if __name__ == '__main__':
+    print('G0ogol link finder. Enter a search term...\n')
+    a = input('')
+    geturls(a)
