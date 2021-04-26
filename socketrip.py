@@ -28,7 +28,13 @@ def geturls(a):
 
 
     if returndat.find(stoppingpoint) <= 0:
-        print('Got ' + str(len(urlsgot)) + ' URLS../n')
+        ##spit out urls.
+        intstat = 0
+        for x in urlsgot:
+            intstat += 1
+            if intstat > len(urlsgot) - 10:
+                print(x + '\n')
+
         geturls(a)
 
     elif returndat.find(stoppingpoint) > -1:
